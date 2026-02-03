@@ -8,7 +8,7 @@ import logging
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Literal
+from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
@@ -334,7 +334,7 @@ class ABTest:
             sample_ids: List of identifiers.
             actuals: List of actual labels.
         """
-        for sample_id, actual in zip(sample_ids, actuals):
+        for sample_id, actual in zip(sample_ids, actuals, strict=False):
             self.record_outcome(sample_id, actual)
 
     def compute_metrics(self) -> dict[str, dict[str, float]]:
@@ -484,12 +484,12 @@ class ABTest:
         chi2, p_value, _, _ = stats.chi2_contingency(table)
         return float(p_value)
 
-    def _t_test(self, control: Variant, treatment: Variant) -> float:
+    def _t_test(self, _control: Variant, _treatment: Variant) -> float:
         """Two-sample t-test for comparing means.
 
         Args:
-            control: Control variant.
-            treatment: Treatment variant.
+            _control: Control variant.
+            _treatment: Treatment variant.
 
         Returns:
             P-value from t-test.
@@ -570,10 +570,7 @@ def run_offline_ab_test(
     _, p_value, _, _ = stats.chi2_contingency(table)
 
     # Relative improvement
-    if control_acc > 0:
-        relative_improvement = (treatment_acc - control_acc) / control_acc
-    else:
-        relative_improvement = 0.0
+    relative_improvement = (treatment_acc - control_acc) / control_acc if control_acc > 0 else 0.0
 
     return ABTestResult(
         test_name=test_name,

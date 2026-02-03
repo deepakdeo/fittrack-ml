@@ -13,8 +13,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.optim import Adam, AdamW
-from torch.optim.lr_scheduler import ReduceLROnPlateau, CosineAnnealingLR
+from torch.optim import AdamW
+from torch.optim.lr_scheduler import CosineAnnealingLR, ReduceLROnPlateau
 from torch.utils.data import DataLoader
 
 from fittrack.models.data_loaders import get_device
@@ -179,7 +179,7 @@ class ActivityCNN(nn.Module):
         self,
         in_channels: int,
         num_classes: int = 6,
-        seq_length: int = 128,
+        seq_length: int = 128,  # noqa: ARG002
         channels: list[int] | None = None,
         kernel_sizes: list[int] | None = None,
         dropout: float = 0.3,
@@ -189,7 +189,7 @@ class ActivityCNN(nn.Module):
         Args:
             in_channels: Number of input channels (sensor axes).
             num_classes: Number of output classes.
-            seq_length: Input sequence length.
+            seq_length: Input sequence length (kept for API compatibility).
             channels: List of channel sizes for conv layers.
             kernel_sizes: List of kernel sizes for conv layers.
             dropout: Dropout rate.
@@ -204,7 +204,7 @@ class ActivityCNN(nn.Module):
         self.conv_blocks = nn.ModuleList()
         prev_channels = in_channels
 
-        for ch, ks in zip(channels, kernel_sizes):
+        for ch, ks in zip(channels, kernel_sizes, strict=False):
             block = nn.Sequential(
                 nn.Conv1d(prev_channels, ch, kernel_size=ks, padding=ks // 2),
                 nn.BatchNorm1d(ch),

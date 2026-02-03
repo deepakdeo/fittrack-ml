@@ -59,18 +59,17 @@ def download_har_dataset(
 
     total_size = int(response.headers.get("content-length", 0))
 
-    with open(zip_path, "wb") as f:
-        with tqdm(
-            total=total_size,
-            unit="B",
-            unit_scale=True,
-            unit_divisor=1024,
-            desc="Downloading",
-        ) as pbar:
-            for chunk in response.iter_content(chunk_size=8192):
-                if chunk:
-                    f.write(chunk)
-                    pbar.update(len(chunk))
+    with open(zip_path, "wb") as f, tqdm(
+        total=total_size,
+        unit="B",
+        unit_scale=True,
+        unit_divisor=1024,
+        desc="Downloading",
+    ) as pbar:
+        for chunk in response.iter_content(chunk_size=8192):
+            if chunk:
+                f.write(chunk)
+                pbar.update(len(chunk))
 
     # Extract
     logger.info(f"Extracting dataset to {data_dir}")

@@ -220,7 +220,7 @@ class TestActivityLabels:
 
     def test_activity_ids(self) -> None:
         """Test activity ID range."""
-        assert all(0 <= k <= 5 for k in ACTIVITY_LABELS.keys())
+        assert all(0 <= k <= 5 for k in ACTIVITY_LABELS)
 
     def test_activity_names(self) -> None:
         """Test expected activity names."""

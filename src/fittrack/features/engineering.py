@@ -153,10 +153,7 @@ def extract_time_domain_features(
 
     n_axes = window.shape[1]
     if axis_names is None:
-        if n_axes == 3:
-            axis_names = ["X", "Y", "Z"]
-        else:
-            axis_names = [str(i) for i in range(n_axes)]
+        axis_names = ["X", "Y", "Z"] if n_axes == 3 else [str(i) for i in range(n_axes)]
 
     features: dict[str, float] = {}
 
@@ -217,10 +214,7 @@ def extract_frequency_domain_features(
 
     n_samples, n_axes = window.shape
     if axis_names is None:
-        if n_axes == 3:
-            axis_names = ["X", "Y", "Z"]
-        else:
-            axis_names = [str(i) for i in range(n_axes)]
+        axis_names = ["X", "Y", "Z"] if n_axes == 3 else [str(i) for i in range(n_axes)]
 
     features: dict[str, float] = {}
 

@@ -150,7 +150,7 @@ class TestDataValidation:
     def test_validates_label_range(
         self,
         mock_har_dataset: Path,
-        sample_features: pd.DataFrame,
+        sample_features: pd.DataFrame,  # noqa: ARG002
     ) -> None:
         """Should validate activity_id is in range 1-6."""
         loader = HARDataLoader(mock_har_dataset)

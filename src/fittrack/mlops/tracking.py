@@ -6,10 +6,11 @@ metrics, and artifacts to MLflow.
 
 import logging
 import os
+from collections.abc import Generator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Generator
+from typing import Any
 
 import mlflow
 from mlflow.tracking import MlflowClient

@@ -5,7 +5,7 @@ hyperparameter tuning and cross-validation utilities.
 """
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Literal
 
 import numpy as np
@@ -160,8 +160,8 @@ def train_xgboost(
     """
     try:
         from xgboost import XGBClassifier
-    except ImportError:
-        raise ImportError("XGBoost is required. Install with: pip install xgboost")
+    except ImportError as err:
+        raise ImportError("XGBoost is required. Install with: pip install xgboost") from err
 
     if config is None:
         config = ModelConfig()

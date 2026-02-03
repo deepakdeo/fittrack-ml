@@ -11,7 +11,7 @@ from typing import Literal
 import numpy as np
 import pandas as pd
 from numpy.typing import NDArray
-from sklearn.model_selection import StratifiedShuffleSplit, train_test_split
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 logger = logging.getLogger(__name__)
@@ -179,10 +179,7 @@ def create_train_val_test_split(
         y_labels = y
 
     # Convert X to numpy
-    if isinstance(X, pd.DataFrame):
-        X_array = X.values
-    else:
-        X_array = X
+    X_array = X.values if isinstance(X, pd.DataFrame) else X
 
     # Encode labels
     y_encoded, label_encoder = encode_labels(y_labels)
@@ -295,10 +292,7 @@ def create_subject_split(
     else:
         y_labels = y
 
-    if isinstance(X, pd.DataFrame):
-        X_array = X.values
-    else:
-        X_array = X
+    X_array = X.values if isinstance(X, pd.DataFrame) else X
 
     # Encode labels
     y_encoded, label_encoder = encode_labels(y_labels)
@@ -359,7 +353,7 @@ def get_class_weights(
     else:
         raise ValueError(f"Unknown method: {method}")
 
-    weight_dict = {int(c): float(w) for c, w in zip(classes, weights)}
+    weight_dict = {int(c): float(w) for c, w in zip(classes, weights, strict=False)}
     logger.info(f"Computed class weights: {weight_dict}")
     return weight_dict
 

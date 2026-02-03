@@ -418,13 +418,11 @@ def get_best_model_version(
 
     for version, data in comparison.items():
         value = data["metrics"].get(metric)
-        if value is not None:
-            if ascending and value < best_value:
-                best_version = version
-                best_value = value
-            elif not ascending and value > best_value:
-                best_version = version
-                best_value = value
+        if value is not None and (
+            (ascending and value < best_value) or (not ascending and value > best_value)
+        ):
+            best_version = version
+            best_value = value
 
     if best_version is None:
         raise ValueError(f"No versions found with metric '{metric}'")

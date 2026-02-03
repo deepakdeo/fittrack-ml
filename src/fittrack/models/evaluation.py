@@ -93,7 +93,7 @@ def compute_metrics(
     y_true: NDArray[np.integer],
     y_pred: NDArray[np.integer],
     y_proba: NDArray[np.floating] | None = None,
-    class_names: list[str] | None = None,
+    class_names: list[str] | None = None,  # noqa: ARG001
 ) -> EvaluationMetrics:
     """Compute comprehensive evaluation metrics.
 
@@ -101,7 +101,7 @@ def compute_metrics(
         y_true: True labels.
         y_pred: Predicted labels.
         y_proba: Predicted probabilities (for ROC AUC).
-        class_names: Names of classes for logging.
+        class_names: Names of classes (kept for API compatibility).
 
     Returns:
         EvaluationMetrics containing all computed metrics.
@@ -256,7 +256,7 @@ def plot_roc_curves(
 
     colors = plt.cm.get_cmap("tab10")(np.linspace(0, 1, n_classes))
 
-    for i, (class_name, color) in enumerate(zip(class_names, colors)):
+    for i, (class_name, color) in enumerate(zip(class_names, colors, strict=False)):
         fpr, tpr, _ = roc_curve(y_true_bin[:, i], y_proba[:, i])
         auc = roc_auc_score(y_true_bin[:, i], y_proba[:, i])
         ax.plot(fpr, tpr, color=color, lw=2, label=f"{class_name} (AUC = {auc:.3f})")
@@ -319,7 +319,7 @@ def plot_precision_recall_per_class(
 
     # Add value labels
     for i, (p, r, f) in enumerate(
-        zip(metrics.per_class_precision, metrics.per_class_recall, metrics.per_class_f1)
+        zip(metrics.per_class_precision, metrics.per_class_recall, metrics.per_class_f1, strict=False)
     ):
         ax.text(i - width, p + 0.02, f"{p:.2f}", ha="center", fontsize=8)
         ax.text(i, r + 0.02, f"{r:.2f}", ha="center", fontsize=8)
@@ -374,7 +374,7 @@ def plot_model_comparison(
         bars = ax.bar(x + offset, values, width, label=model_name, color=colors[i])
 
         # Add value labels
-        for bar, val in zip(bars, values):
+        for bar, val in zip(bars, values, strict=False):
             ax.text(
                 bar.get_x() + bar.get_width() / 2,
                 bar.get_height() + 0.01,

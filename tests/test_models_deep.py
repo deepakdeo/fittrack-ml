@@ -10,7 +10,6 @@ from fittrack.models.data_loaders import (
     HARDataset,
     TimeSeriesDataset,
     create_data_loaders,
-    create_sequence_loaders,
     reshape_for_sequence_model,
 )
 from fittrack.models.deep_learning import (

@@ -245,7 +245,7 @@ def initialize_model() -> None:
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_app: FastAPI):
     """Application lifespan manager."""
     # Startup
     logger.info("Starting HAR Prediction API")
@@ -328,13 +328,12 @@ async def predict(request: PredictionRequest) -> PredictionResponse:
 
         # Get probabilities if requested
         probabilities = None
-        if request.return_probabilities:
-            if hasattr(_model, "predict_proba"):
-                probs = _model.predict_proba(features)[0]
-                probabilities = {
-                    ACTIVITY_LABELS.get(i, f"CLASS_{i}"): float(p)
-                    for i, p in enumerate(probs)
-                }
+        if request.return_probabilities and hasattr(_model, "predict_proba"):
+            probs = _model.predict_proba(features)[0]
+            probabilities = {
+                ACTIVITY_LABELS.get(i, f"CLASS_{i}"): float(p)
+                for i, p in enumerate(probs)
+            }
 
         return PredictionResponse(
             prediction=prediction,
@@ -348,7 +347,7 @@ async def predict(request: PredictionRequest) -> PredictionResponse:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Prediction failed: {str(e)}",
-        )
+        ) from e
 
 
 @app.post("/predict/batch", response_model=BatchPredictionResponse, tags=["Prediction"])
@@ -403,7 +402,7 @@ async def predict_batch(request: BatchPredictionRequest) -> BatchPredictionRespo
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Batch prediction failed: {str(e)}",
-        )
+        ) from e
 
 
 @app.post("/reload", tags=["Model"])
@@ -449,7 +448,7 @@ async def reload_model(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to reload model: {str(e)}",
-        )
+        ) from e
 
 
 @app.get("/activities", tags=["Reference"])

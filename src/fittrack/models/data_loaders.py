@@ -5,7 +5,7 @@ training deep learning models on HAR data.
 """
 
 import logging
-from typing import Callable, Literal
+from collections.abc import Callable
 
 import numpy as np
 import torch

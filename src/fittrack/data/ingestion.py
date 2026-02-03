@@ -12,7 +12,7 @@ from typing import Literal
 import numpy as np
 import pandas as pd
 import pandera as pa
-from pandera.typing import DataFrame, Series
+from pandera.typing import Series
 
 logger = logging.getLogger(__name__)
 

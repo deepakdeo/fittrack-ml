@@ -5,8 +5,9 @@ using Dask for larger-than-memory datasets.
 """
 
 import logging
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 import dask.dataframe as dd
 import numpy as np
@@ -145,7 +146,7 @@ def parallel_model_inference(
     model: Any,
     X: np.ndarray,
     batch_size: int = 1000,
-    n_partitions: int = 4,
+    _n_partitions: int = 4,
 ) -> np.ndarray:
     """Run model inference in parallel using Dask.
 
