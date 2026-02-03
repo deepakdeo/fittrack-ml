@@ -1,0 +1,93 @@
+# FitTrack ML - Docker Compose Configuration
+# Includes API server and MLflow tracking server
+
+version: '3.8'
+
+services:
+  # HAR Prediction API
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fittrack-api
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_PATH=/app/models/model.joblib
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./models:/app/models:ro
+      - ./data:/app/data:ro
+    depends_on:
+      - mlflow
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - fittrack-network
+
+  # MLflow Tracking Server
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.10.0
+    container_name: fittrack-mlflow
+    ports:
+      - "5000:5000"
+    environment:
+      - MLFLOW_BACKEND_STORE_URI=sqlite:///mlflow/mlflow.db
+      - MLFLOW_DEFAULT_ARTIFACT_ROOT=/mlflow/artifacts
+    volumes:
+      - mlflow-data:/mlflow
+    command: >
+      mlflow server
+      --host 0.0.0.0
+      --port 5000
+      --backend-store-uri sqlite:///mlflow/mlflow.db
+      --default-artifact-root /mlflow/artifacts
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - fittrack-network
+
+  # Jupyter Notebook for development (optional)
+  notebook:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fittrack-notebook
+    ports:
+      - "8888:8888"
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    volumes:
+      - ./notebooks:/app/notebooks
+      - ./data:/app/data
+      - ./models:/app/models
+    command: >
+      jupyter notebook
+      --ip=0.0.0.0
+      --port=8888
+      --no-browser
+      --allow-root
+      --NotebookApp.token=''
+      --NotebookApp.password=''
+    profiles:
+      - dev
+    networks:
+      - fittrack-network
+
+networks:
+  fittrack-network:
+    driver: bridge
+
+volumes:
+  mlflow-data:
+    driver: local
