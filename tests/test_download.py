@@ -36,11 +36,15 @@ class TestDownloadHarDataset:
             mock_get.return_value = mock_response
 
             # Mock zipfile to avoid extraction issues
-            with patch("fittrack.data.download.zipfile.ZipFile"):
-                # This should attempt download despite existing dir
-                with pytest.raises(Exception):
-                    # Will fail because our mock zip isn't real, but proves download was attempted
-                    download_har_dataset(data_dir=tmp_path, force=True)
+            with patch("fittrack.data.download.zipfile.ZipFile") as mock_zip:
+                mock_zip_instance = MagicMock()
+                mock_zip.return_value.__enter__ = MagicMock(return_value=mock_zip_instance)
+                mock_zip.return_value.__exit__ = MagicMock(return_value=False)
+
+                download_har_dataset(data_dir=tmp_path, force=True)
+
+                # Verify download was attempted (requests.get was called)
+                mock_get.assert_called_once()
 
     def test_creates_data_directory(self, tmp_path: Path) -> None:
         """Should create data directory if it doesn't exist."""
