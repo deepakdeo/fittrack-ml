@@ -116,12 +116,28 @@ class HARDataLoader:
 
     @property
     def feature_names(self) -> list[str]:
-        """Load and return feature names from features.txt."""
+        """Load and return feature names from features.txt.
+
+        Note: The UCI HAR dataset has duplicate feature names, so we
+        append indices to make them unique.
+        """
         if self._feature_names is None:
             features_path = self.data_dir / "features.txt"
             with open(features_path) as f:
                 # Format: "1 tBodyAcc-mean()-X"
-                self._feature_names = [line.split()[1] for line in f.readlines()]
+                raw_names = [line.split()[1] for line in f.readlines()]
+
+            # Make names unique by appending index for duplicates
+            seen: dict[str, int] = {}
+            unique_names: list[str] = []
+            for name in raw_names:
+                if name in seen:
+                    seen[name] += 1
+                    unique_names.append(f"{name}_{seen[name]}")
+                else:
+                    seen[name] = 0
+                    unique_names.append(name)
+            self._feature_names = unique_names
         return self._feature_names
 
     def load_split(

@@ -47,13 +47,35 @@ End-to-end machine learning pipeline for **Human Activity Recognition (HAR)** fr
 | **Deployment** | FastAPI REST endpoint with Docker containerization |
 | **Scalability** | Dask integration for parallel processing of large datasets |
 
-## Model Performance
+## Results
 
-Results on UCI HAR Dataset (30 subjects, 6 activity classes):
+### Model Performance
+
+The Random Forest classifier achieves **98% accuracy** on the UCI HAR dataset:
+
+![Model Performance](docs/figures/model_performance.png)
+
+### Confusion Matrix
+
+Strong performance across all 6 activity classes with minimal confusion:
+
+![Confusion Matrix](docs/figures/confusion_matrix.png)
+
+### Data Exploration
+
+**Class Distribution** - Balanced dataset across activities:
+
+![Class Distribution](docs/figures/class_distribution.png)
+
+**Feature Distributions** - Clear separation between static (sitting/standing/laying) and dynamic activities:
+
+![Feature Distributions](docs/figures/feature_distributions.png)
+
+### Performance Summary
 
 | Model | Accuracy | F1-Score (Macro) | Training Time |
 |-------|----------|------------------|---------------|
-| Random Forest | ~96% | ~0.96 | Fast |
+| Random Forest | 98.1% | 98.1% | Fast |
 | XGBoost | ~97% | ~0.97 | Fast |
 | LSTM | ~95% | ~0.95 | Moderate |
 | 1D-CNN | ~96% | ~0.96 | Moderate |
