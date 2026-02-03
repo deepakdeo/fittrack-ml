@@ -191,7 +191,7 @@ class TestABTest:
         y_test = np.random.randint(0, 2, 50)
 
         for i in range(50):
-            variant, pred = test.predict(X_test[i:i+1], sample_id=f"user_{i}")
+            variant, pred = test.predict(X_test[i : i + 1], sample_id=f"user_{i}")
             test.record_outcome(f"user_{i}", y_test[i])
 
         # Compute metrics

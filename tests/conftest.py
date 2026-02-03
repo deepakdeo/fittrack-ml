@@ -39,10 +39,12 @@ def sample_labels() -> pd.DataFrame:
         6: "LAYING",
     }
 
-    return pd.DataFrame({
-        "activity_id": activity_ids,
-        "activity": [activity_map[i] for i in activity_ids],
-    })
+    return pd.DataFrame(
+        {
+            "activity_id": activity_ids,
+            "activity": [activity_map[i] for i in activity_ids],
+        }
+    )
 
 
 @pytest.fixture
@@ -70,7 +72,7 @@ def mock_har_dataset(
 
     # Create feature names file
     feature_names = [f"feature_{i}" for i in range(561)]
-    features_txt = "\n".join(f"{i+1} {name}" for i, name in enumerate(feature_names))
+    features_txt = "\n".join(f"{i + 1} {name}" for i, name in enumerate(feature_names))
     (dataset_dir / "features.txt").write_text(features_txt)
 
     # Save train data

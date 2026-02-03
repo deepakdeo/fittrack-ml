@@ -85,13 +85,14 @@ def process_sensor_data_parallel(
     Returns:
         Dask DataFrame with extracted features.
     """
+
     def extract_window_features(partition: pd.DataFrame) -> pd.DataFrame:
         """Extract features from a single partition."""
         features_list = []
         step = int(window_size * (1 - overlap))
 
         for start in range(0, len(partition) - window_size + 1, step):
-            window = partition.iloc[start:start + window_size]
+            window = partition.iloc[start : start + window_size]
             window_features = {}
 
             for col in feature_columns:
@@ -106,7 +107,9 @@ def process_sensor_data_parallel(
         return pd.DataFrame(features_list)
 
     # Apply to each partition
-    meta = {f"{col}_{stat}": float for col in feature_columns for stat in ["mean", "std", "min", "max"]}
+    meta = {
+        f"{col}_{stat}": float for col in feature_columns for stat in ["mean", "std", "min", "max"]
+    }
     result = ddf.map_partitions(extract_window_features, meta=meta)
 
     return result
@@ -294,15 +297,17 @@ def demonstrate_dask_processing() -> None:
     # Create sample data
     np.random.seed(42)
     n_samples = 100000
-    df = pd.DataFrame({
-        "acc_x": np.random.randn(n_samples),
-        "acc_y": np.random.randn(n_samples),
-        "acc_z": np.random.randn(n_samples),
-        "gyro_x": np.random.randn(n_samples),
-        "gyro_y": np.random.randn(n_samples),
-        "gyro_z": np.random.randn(n_samples),
-        "timestamp": pd.date_range("2024-01-01", periods=n_samples, freq="20ms"),
-    })
+    df = pd.DataFrame(
+        {
+            "acc_x": np.random.randn(n_samples),
+            "acc_y": np.random.randn(n_samples),
+            "acc_z": np.random.randn(n_samples),
+            "gyro_x": np.random.randn(n_samples),
+            "gyro_y": np.random.randn(n_samples),
+            "gyro_z": np.random.randn(n_samples),
+            "timestamp": pd.date_range("2024-01-01", periods=n_samples, freq="20ms"),
+        }
+    )
 
     print(f"Sample data: {len(df):,} rows")
 
@@ -317,7 +322,7 @@ def demonstrate_dask_processing() -> None:
 
     # Parallel transformation
     print("\nParallel transformation (computing magnitude):")
-    ddf["magnitude"] = (ddf["acc_x"]**2 + ddf["acc_y"]**2 + ddf["acc_z"]**2).apply(
+    ddf["magnitude"] = (ddf["acc_x"] ** 2 + ddf["acc_y"] ** 2 + ddf["acc_z"] ** 2).apply(
         np.sqrt, meta=("magnitude", float)
     )
     mean_mag = ddf["magnitude"].mean().compute()

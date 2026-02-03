@@ -390,9 +390,7 @@ class ExperimentTracker:
         for run in runs:
             run_name = run["run_name"] or run["run_id"][:8]
             if metrics:
-                comparison[run_name] = {
-                    m: run["metrics"].get(m, None) for m in metrics
-                }
+                comparison[run_name] = {m: run["metrics"].get(m, None) for m in metrics}
             else:
                 comparison[run_name] = run["metrics"]
 

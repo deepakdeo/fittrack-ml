@@ -81,9 +81,7 @@ class PredictionResponse(BaseModel):
 
     prediction: int = Field(..., description="Predicted class ID")
     activity: str = Field(..., description="Predicted activity name")
-    probabilities: dict[str, float] | None = Field(
-        default=None, description="Class probabilities"
-    )
+    probabilities: dict[str, float] | None = Field(default=None, description="Class probabilities")
     model_version: str = Field(..., description="Model version used")
 
     model_config = {
@@ -113,9 +111,7 @@ class BatchPredictionResponse(BaseModel):
         model_version: Model version used.
     """
 
-    predictions: list[dict[str, Any]] = Field(
-        ..., description="List of predictions"
-    )
+    predictions: list[dict[str, Any]] = Field(..., description="List of predictions")
     model_version: str = Field(..., description="Model version used")
 
 
@@ -183,6 +179,7 @@ def load_model_from_path(model_path: str | Path) -> Any:
         return joblib.load(model_path)
     elif model_path.suffix in (".pt", ".pth"):
         import torch
+
         return torch.load(model_path)
     else:
         # Try joblib as default
@@ -331,8 +328,7 @@ async def predict(request: PredictionRequest) -> PredictionResponse:
         if request.return_probabilities and hasattr(_model, "predict_proba"):
             probs = _model.predict_proba(features)[0]
             probabilities = {
-                ACTIVITY_LABELS.get(i, f"CLASS_{i}"): float(p)
-                for i, p in enumerate(probs)
+                ACTIVITY_LABELS.get(i, f"CLASS_{i}"): float(p) for i, p in enumerate(probs)
             }
 
         return PredictionResponse(
@@ -387,8 +383,7 @@ async def predict_batch(request: BatchPredictionRequest) -> BatchPredictionRespo
             }
             if probs is not None:
                 result["probabilities"] = {
-                    ACTIVITY_LABELS.get(j, f"CLASS_{j}"): float(p)
-                    for j, p in enumerate(probs[i])
+                    ACTIVITY_LABELS.get(j, f"CLASS_{j}"): float(p) for j, p in enumerate(probs[i])
                 }
             results.append(result)
 

@@ -326,10 +326,7 @@ def tune_hyperparameters(
         ...     rf, X_train, y_train, param_grid, search_type="random"
         ... )
     """
-    logger.info(
-        f"Starting {search_type} search with {cv}-fold CV, "
-        f"scoring={scoring}"
-    )
+    logger.info(f"Starting {search_type} search with {cv}-fold CV, scoring={scoring}")
 
     if search_type == "grid":
         search = GridSearchCV(
@@ -397,6 +394,7 @@ def train_with_tuning(
         param_grid = get_rf_param_grid(search_type)
     elif model_type == "xgboost":
         from xgboost import XGBClassifier
+
         base_model = XGBClassifier(
             random_state=42,
             n_jobs=-1,
@@ -489,18 +487,12 @@ class ClassicalModelTrainer:
             TrainingResult for the trained model.
         """
         if tune:
-            result = train_with_tuning(
-                model_type, X_train, y_train, X_val, y_val
-            )
+            result = train_with_tuning(model_type, X_train, y_train, X_val, y_val)
         else:
             if model_type == "random_forest":
-                result = train_random_forest(
-                    X_train, y_train, X_val, y_val, config
-                )
+                result = train_random_forest(X_train, y_train, X_val, y_val, config)
             elif model_type == "xgboost":
-                result = train_xgboost(
-                    X_train, y_train, X_val, y_val, config
-                )
+                result = train_xgboost(X_train, y_train, X_val, y_val, config)
             else:
                 raise ValueError(f"Unknown model type: {model_type}")
 

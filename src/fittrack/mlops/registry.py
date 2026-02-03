@@ -113,9 +113,7 @@ class ModelRegistry:
 
         # Add description and tags
         if description:
-            self.client.update_model_version(
-                name, mv.version, description=description
-            )
+            self.client.update_model_version(name, mv.version, description=description)
         if tags:
             for key, value in tags.items():
                 self.client.set_model_version_tag(name, mv.version, key, value)
@@ -454,9 +452,6 @@ def promote_best_to_production(
     registry = ModelRegistry()
     registry.transition_stage(name, best_version, "Production")
 
-    logger.info(
-        f"Promoted {name} v{best_version} to Production "
-        f"({metric}={best_value:.4f})"
-    )
+    logger.info(f"Promoted {name} v{best_version} to Production ({metric}={best_value:.4f})")
 
     return best_version

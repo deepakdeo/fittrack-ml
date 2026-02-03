@@ -62,7 +62,9 @@ def normalize_features(
     X_val: pd.DataFrame | NDArray[np.floating] | None = None,
     X_test: pd.DataFrame | NDArray[np.floating] | None = None,
     method: Literal["standard", "minmax"] = "standard",
-) -> tuple[NDArray[np.floating], NDArray[np.floating] | None, NDArray[np.floating] | None, StandardScaler]:
+) -> tuple[
+    NDArray[np.floating], NDArray[np.floating] | None, NDArray[np.floating] | None, StandardScaler
+]:
     """Normalize features using the specified method.
 
     Fits the scaler on training data only, then transforms all splits.
@@ -85,6 +87,7 @@ def normalize_features(
         scaler = StandardScaler()
     elif method == "minmax":
         from sklearn.preprocessing import MinMaxScaler
+
         scaler = MinMaxScaler()  # type: ignore
     else:
         raise ValueError(f"Unknown normalization method: {method}")
@@ -207,9 +210,7 @@ def create_train_val_test_split(
         stratify=stratify_split2,
     )
 
-    logger.info(
-        f"Split sizes - Train: {len(X_train)}, Val: {len(X_val)}, Test: {len(X_test)}"
-    )
+    logger.info(f"Split sizes - Train: {len(X_train)}, Val: {len(X_val)}, Test: {len(X_test)}")
 
     # Normalize if requested
     scaler = None
@@ -498,14 +499,10 @@ class DataPreprocessor:
         X_processed = X.copy()
 
         if self.remove_correlated:
-            X_processed, _ = remove_correlated_features(
-                X_processed, self.correlation_threshold
-            )
+            X_processed, _ = remove_correlated_features(X_processed, self.correlation_threshold)
 
         if self.n_select_features is not None:
-            y_encoded, _ = encode_labels(
-                y["activity"] if isinstance(y, pd.DataFrame) else y
-            )
+            y_encoded, _ = encode_labels(y["activity"] if isinstance(y, pd.DataFrame) else y)
             X_processed, self.selected_features = select_top_features(
                 X_processed, y_encoded, self.n_select_features
             )

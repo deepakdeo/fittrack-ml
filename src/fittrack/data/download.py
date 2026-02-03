@@ -16,7 +16,9 @@ from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
 
-UCI_HAR_URL = "https://archive.ics.uci.edu/ml/machine-learning-databases/00240/UCI%20HAR%20Dataset.zip"
+UCI_HAR_URL = (
+    "https://archive.ics.uci.edu/ml/machine-learning-databases/00240/UCI%20HAR%20Dataset.zip"
+)
 DEFAULT_DATA_DIR = Path(__file__).parent.parent.parent.parent / "data" / "raw"
 
 
@@ -59,13 +61,16 @@ def download_har_dataset(
 
     total_size = int(response.headers.get("content-length", 0))
 
-    with open(zip_path, "wb") as f, tqdm(
-        total=total_size,
-        unit="B",
-        unit_scale=True,
-        unit_divisor=1024,
-        desc="Downloading",
-    ) as pbar:
+    with (
+        open(zip_path, "wb") as f,
+        tqdm(
+            total=total_size,
+            unit="B",
+            unit_scale=True,
+            unit_divisor=1024,
+            desc="Downloading",
+        ) as pbar,
+    ):
         for chunk in response.iter_content(chunk_size=8192):
             if chunk:
                 f.write(chunk)

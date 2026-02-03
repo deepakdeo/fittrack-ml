@@ -221,8 +221,7 @@ def create_data_loaders(
         )
 
     logger.info(
-        f"Created DataLoaders - Train: {len(train_dataset)} samples, "
-        f"batch_size={batch_size}"
+        f"Created DataLoaders - Train: {len(train_dataset)} samples, batch_size={batch_size}"
     )
 
     return loaders

@@ -290,12 +290,14 @@ class HARClassifier(nn.Module):
         prev_size = input_size
 
         for hidden_size in hidden_sizes:
-            layers.extend([
-                nn.Linear(prev_size, hidden_size),
-                nn.BatchNorm1d(hidden_size),
-                nn.ReLU(),
-                nn.Dropout(dropout),
-            ])
+            layers.extend(
+                [
+                    nn.Linear(prev_size, hidden_size),
+                    nn.BatchNorm1d(hidden_size),
+                    nn.ReLU(),
+                    nn.Dropout(dropout),
+                ]
+            )
             prev_size = hidden_size
 
         layers.append(nn.Linear(prev_size, num_classes))

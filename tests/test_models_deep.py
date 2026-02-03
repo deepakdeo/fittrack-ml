@@ -96,9 +96,7 @@ class TestDataLoaders:
         X_val = np.random.randn(20, 20).astype(np.float32)
         y_val = np.random.randint(0, 6, 20)
 
-        loaders = create_data_loaders(
-            X_train, y_train, X_val, y_val, batch_size=16
-        )
+        loaders = create_data_loaders(X_train, y_train, X_val, y_val, batch_size=16)
 
         assert "train" in loaders
         assert "val" in loaders
@@ -110,9 +108,7 @@ class TestDataLoaders:
         X_train = np.random.randn(100, 20).astype(np.float32)
         y_train = np.array([0] * 90 + [1] * 10)
 
-        loaders = create_data_loaders(
-            X_train, y_train, weighted_sampling=True, batch_size=16
-        )
+        loaders = create_data_loaders(X_train, y_train, weighted_sampling=True, batch_size=16)
 
         # Sampler should be used
         assert loaders["train"].sampler is not None
@@ -175,9 +171,7 @@ class TestActivityLSTM:
 
     def test_lstm_bidirectional(self) -> None:
         """Test bidirectional LSTM."""
-        model = ActivityLSTM(
-            input_size=9, hidden_size=32, num_classes=6, bidirectional=True
-        )
+        model = ActivityLSTM(input_size=9, hidden_size=32, num_classes=6, bidirectional=True)
         x = torch.randn(8, 128, 9)
 
         output = model(x)
@@ -186,9 +180,7 @@ class TestActivityLSTM:
 
     def test_lstm_single_layer(self) -> None:
         """Test single-layer LSTM (no dropout between layers)."""
-        model = ActivityLSTM(
-            input_size=9, hidden_size=32, num_layers=1, num_classes=6
-        )
+        model = ActivityLSTM(input_size=9, hidden_size=32, num_layers=1, num_classes=6)
         x = torch.randn(8, 128, 9)
 
         output = model(x)
@@ -237,9 +229,7 @@ class TestHARClassifier:
 
     def test_mlp_custom_hidden(self) -> None:
         """Test MLP with custom hidden layers."""
-        model = HARClassifier(
-            input_size=100, num_classes=6, hidden_sizes=[64, 32]
-        )
+        model = HARClassifier(input_size=100, num_classes=6, hidden_sizes=[64, 32])
         x = torch.randn(8, 100)
 
         output = model(x)
@@ -298,9 +288,7 @@ class TestTrainingUtils:
         optimizer = torch.optim.Adam(model.parameters())
         criterion = torch.nn.CrossEntropyLoss()
 
-        loss, acc = train_epoch(
-            model, simple_data, optimizer, criterion, torch.device("cpu")
-        )
+        loss, acc = train_epoch(model, simple_data, optimizer, criterion, torch.device("cpu"))
 
         assert loss > 0
         assert 0.0 <= acc <= 1.0
@@ -332,9 +320,7 @@ class TestTrainModel:
         model = HARClassifier(input_size=20, num_classes=4)
         config = TrainingConfig(epochs=3, patience=10)
 
-        history = train_model(
-            model, train_loader, val_loader, config, device=torch.device("cpu")
-        )
+        history = train_model(model, train_loader, val_loader, config, device=torch.device("cpu"))
 
         assert isinstance(history, TrainingHistory)
         assert len(history.train_losses) == 3

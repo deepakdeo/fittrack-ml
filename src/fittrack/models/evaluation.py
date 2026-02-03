@@ -319,7 +319,12 @@ def plot_precision_recall_per_class(
 
     # Add value labels
     for i, (p, r, f) in enumerate(
-        zip(metrics.per_class_precision, metrics.per_class_recall, metrics.per_class_f1, strict=False)
+        zip(
+            metrics.per_class_precision,
+            metrics.per_class_recall,
+            metrics.per_class_f1,
+            strict=False,
+        )
     ):
         ax.text(i - width, p + 0.02, f"{p:.2f}", ha="center", fontsize=8)
         ax.text(i, r + 0.02, f"{r:.2f}", ha="center", fontsize=8)
@@ -583,7 +588,9 @@ class ModelEvaluator:
 
             metrics_to_compare = ["accuracy", "f1_macro", "precision_macro", "recall_macro"]
             for metric in metrics_to_compare:
-                best_model = max(self.results.keys(), key=lambda x: getattr(self.results[x], metric))
+                best_model = max(
+                    self.results.keys(), key=lambda x: getattr(self.results[x], metric)
+                )
                 best_score = getattr(self.results[best_model], metric)
                 lines.append(f"  {metric}: {best_model} ({best_score:.4f})")
 

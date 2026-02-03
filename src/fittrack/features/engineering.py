@@ -283,9 +283,7 @@ def create_windows(
     n_samples, n_features = data.shape
 
     if n_samples < window_size:
-        raise ValueError(
-            f"Data length ({n_samples}) is less than window size ({window_size})"
-        )
+        raise ValueError(f"Data length ({n_samples}) is less than window size ({window_size})")
 
     step_size = int(window_size * (1 - overlap))
     if step_size < 1:
@@ -406,9 +404,7 @@ class FeatureExtractor:
                 start = i * step_size
                 end = start + self.config.window_size
                 # Majority vote for window label
-                window_label_values, counts = np.unique(
-                    labels[start:end], return_counts=True
-                )
+                window_label_values, counts = np.unique(labels[start:end], return_counts=True)
                 window_labels.append(window_label_values[np.argmax(counts)])
             features_df["label"] = window_labels
 

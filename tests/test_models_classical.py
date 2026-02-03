@@ -210,9 +210,7 @@ class TestClassicalModelTrainer:
         X_train, y_train, X_val, y_val = sample_data
         trainer = ClassicalModelTrainer()
 
-        result = trainer.train(
-            "random_forest", X_train, y_train, X_val, y_val, tune=False
-        )
+        result = trainer.train("random_forest", X_train, y_train, X_val, y_val, tune=False)
 
         assert "random_forest" in trainer.results
         assert result.model is not None
@@ -222,9 +220,7 @@ class TestClassicalModelTrainer:
         X_train, y_train, X_val, y_val = sample_data
         trainer = ClassicalModelTrainer()
 
-        result = trainer.train(
-            "xgboost", X_train, y_train, X_val, y_val, tune=False
-        )
+        result = trainer.train("xgboost", X_train, y_train, X_val, y_val, tune=False)
 
         assert "xgboost" in trainer.results
         assert result.model is not None

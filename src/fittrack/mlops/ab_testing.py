@@ -407,9 +407,7 @@ class ABTest:
             relative_improvement = 0.0
 
         # Statistical significance test
-        p_value = self._compute_significance(
-            control_variant, treatment_variant, metric
-        )
+        p_value = self._compute_significance(control_variant, treatment_variant, metric)
 
         alpha = 1 - self.confidence_level
         is_significant = p_value < alpha
