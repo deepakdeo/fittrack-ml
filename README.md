@@ -1,37 +1,52 @@
 # FitTrack ML
 
 [![CI](https://github.com/deepakdeo/fittrack-ml/actions/workflows/ci.yml/badge.svg)](https://github.com/deepakdeo/fittrack-ml/actions/workflows/ci.yml)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red.svg)](https://pytorch.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+[![Tests](https://img.shields.io/badge/tests-139%20passed-brightgreen.svg)]()
 
 End-to-end machine learning pipeline for **Human Activity Recognition (HAR)** from wearable sensor data. Classifies physical activities (walking, running, sitting, etc.) from accelerometer and gyroscope readings—similar to fitness tracking in devices like Garmin watches.
 
 ## Architecture
 
+```mermaid
+flowchart LR
+    subgraph Data["📊 Data Layer"]
+        A[UCI HAR Dataset] --> B[Pandera Validation]
+        B --> C[Train/Val/Test Split]
+    end
+
+    subgraph Features["⚙️ Feature Engineering"]
+        C --> D[Time Domain]
+        C --> E[Frequency Domain]
+        D --> F[Normalized Features]
+        E --> F
+    end
+
+    subgraph Models["🤖 Model Training"]
+        F --> G[Random Forest]
+        F --> H[XGBoost]
+        F --> I[LSTM]
+        F --> J[1D-CNN]
+    end
+
+    subgraph MLOps["📈 MLOps"]
+        G & H & I & J --> K[MLflow Tracking]
+        K --> L[Model Registry]
+        L --> M[A/B Testing]
+    end
+
+    subgraph Deploy["🚀 Deployment"]
+        M --> N[FastAPI]
+        N --> O[Docker]
+    end
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           FitTrack ML Pipeline                              │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌───────────┐ │
-│  │   Raw Data   │───▶│   Feature    │───▶│    Model     │───▶│    API    │ │
-│  │  Ingestion   │    │ Engineering  │    │   Training   │    │  Serving  │ │
-│  └──────────────┘    └──────────────┘    └──────────────┘    └───────────┘ │
-│        │                    │                   │                   │       │
-│        ▼                    ▼                   ▼                   ▼       │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌───────────┐ │
-│  │   Pandera    │    │ Time/Freq    │    │  Classical   │    │  FastAPI  │ │
-│  │  Validation  │    │   Domain     │    │  & Deep DL   │    │  Docker   │ │
-│  └──────────────┘    └──────────────┘    └──────────────┘    └───────────┘ │
-│                                                │                           │
-│                                                ▼                           │
-│                                         ┌──────────────┐                   │
-│                                         │    MLflow    │                   │
-│                                         │   Tracking   │                   │
-│                                         └──────────────┘                   │
-└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pipeline Flow:**
+```
+Raw Sensor Data → Validation → Preprocessing → Feature Extraction → Model Training → MLflow → FastAPI
 ```
 
 ## Key Features
@@ -51,7 +66,7 @@ End-to-end machine learning pipeline for **Human Activity Recognition (HAR)** fr
 
 ### Model Performance
 
-The Random Forest classifier achieves **98% accuracy** on the UCI HAR dataset:
+The Random Forest classifier achieves **97.8% test accuracy** on the UCI HAR dataset:
 
 ![Model Performance](docs/figures/model_performance.png)
 
@@ -73,14 +88,14 @@ Strong performance across all 6 activity classes with minimal confusion:
 
 ### Performance Summary
 
-| Model | Accuracy | F1-Score (Macro) | Training Time |
-|-------|----------|------------------|---------------|
-| Random Forest | 98.1% | 98.1% | Fast |
-| XGBoost | ~97% | ~0.97 | Fast |
-| LSTM | ~95% | ~0.95 | Moderate |
-| 1D-CNN | ~96% | ~0.96 | Moderate |
+| Model | Test Accuracy | F1-Score (Macro) | Training Time |
+|-------|---------------|------------------|---------------|
+| **Random Forest** | **97.8%** | **97.9%** | ~2 sec |
+| XGBoost | ~96% | ~0.96 | ~5 sec |
+| LSTM | ~94% | ~0.94 | ~2 min |
+| 1D-CNN | ~95% | ~0.95 | ~2 min |
 
-*Results may vary based on random seed and hyperparameter configuration.*
+*Verified on UCI HAR test set (2,947 samples). Results may vary based on random seed and hyperparameter configuration.*
 
 ## Quick Start
 

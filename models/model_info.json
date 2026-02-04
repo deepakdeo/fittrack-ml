@@ -1,0 +1,16 @@
+{
+  "classes": [
+    "WALKING",
+    "WALKING_UPSTAIRS",
+    "WALKING_DOWNSTAIRS",
+    "SITTING",
+    "STANDING",
+    "LAYING"
+  ],
+  "n_features": 561,
+  "model_type": "RandomForestClassifier",
+  "metrics": {
+    "accuracy": 0.9845874886672711,
+    "f1_macro": 0.9847487224633443
+  }
+}
