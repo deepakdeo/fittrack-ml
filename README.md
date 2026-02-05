@@ -1,5 +1,9 @@
 # FitTrack ML
 
+<p align="center">
+  <img src="docs/figures/github_header_a.png" alt="FitTrack ML - Human Activity Recognition Pipeline" width="100%">
+</p>
+
 [![CI](https://github.com/deepakdeo/fittrack-ml/actions/workflows/ci.yml/badge.svg)](https://github.com/deepakdeo/fittrack-ml/actions/workflows/ci.yml)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red.svg)](https://pytorch.org/)
@@ -12,6 +16,7 @@ End-to-end machine learning pipeline for **Human Activity Recognition (HAR)** fr
 ## Architecture
 
 ```mermaid
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#58a6ff', 'primaryTextColor': '#e6edf3', 'primaryBorderColor': '#30363d', 'lineColor': '#8b949e', 'secondaryColor': '#161b22', 'tertiaryColor': '#0d1117'}}}%%
 flowchart LR
     subgraph Data["📊 Data Layer"]
         A[UCI HAR Dataset] --> B[Pandera Validation]
@@ -42,6 +47,12 @@ flowchart LR
         M --> N[FastAPI]
         N --> O[Docker]
     end
+
+    style Data fill:#1f3a5f,stroke:#58a6ff,stroke-width:2px
+    style Features fill:#3d3a1f,stroke:#d29922,stroke-width:2px
+    style Models fill:#1f3d2a,stroke:#3fb950,stroke-width:2px
+    style MLOps fill:#2d1f4a,stroke:#a371f7,stroke-width:2px
+    style Deploy fill:#4a1f2a,stroke:#f85149,stroke-width:2px
 ```
 
 **Pipeline Flow:**
