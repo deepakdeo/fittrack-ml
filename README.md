@@ -16,27 +16,70 @@ End-to-end machine learning pipeline for **Human Activity Recognition (HAR)** fr
 ## Architecture
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {
+  'fontFamily': 'ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial',
+  'fontSize': '19px',
+  'primaryTextColor': '#111827',
+  'lineColor': '#9CA3AF'
+}}}%%
 flowchart LR
-    subgraph Data[Data Layer]
-        A[UCI HAR] --> B[Validation] --> C[Split]
-    end
-    subgraph Features[Feature Engineering]
-        C --> D[Time + Freq Domain] --> E[Normalize]
-    end
-    subgraph Models[Model Training]
-        E --> F[RF / XGB / LSTM / CNN]
-    end
-    subgraph MLOps[MLOps]
-        F --> G[MLflow] --> H[Registry]
-    end
-    subgraph Deploy[Deployment]
-        H --> I[FastAPI] --> J[Docker]
-    end
+
+  subgraph D["📥 Data Layer"]
+    direction TB
+    A[(UCI<br/>HAR<br/>Dataset)] --> B["✅ Validate"]
+    B --> C["✂️ Split<br/>train/val/test"]
+  end
+
+  subgraph F["🧪 Feature Engineering"]
+    direction TB
+    C --> D1["⏱️ Time-domain<br/>features"]
+    C --> D2["📈 Frequency-domain<br/>features"]
+    D1 --> E["📏 Normalize / Scale"]
+    D2 --> E
+  end
+
+  subgraph M["🤖 Model Training"]
+    direction TB
+    E --> F1["🌲 RF / XGB"]
+    E --> F2["🧠 LSTM / CNN#160;#160;"]
+    F1 --> X["📊 Evaluate + Select<br/>(metrics, CM, ROC)"]
+    F2 --> X
+  end
+
+  subgraph O["🧰 MLOps#160;#160;"]
+    direction TB
+    X --> G["🧾 MLflow Tracking<br/>(params, metrics, artifacts)"]
+    G --> H["📦 Model Registry#160;#160;"]
+  end
+
+  subgraph P["🚀 Deployment"]
+    direction TB
+    H --> I["⚡ FastAPI Service#160;#160;"]
+    I --> J["🐳 Docker Image"]
+  end
+
+  classDef node fill:#FFFFFF,stroke:#D1D5DB,stroke-width:1px,rx:10,ry:10;
+  classDef emphasis fill:#EEF2FF,stroke:#A5B4FC,stroke-width:1px,rx:10,ry:10;
+  classDef dataLayer fill:#FFF7ED,stroke:#FED7AA,stroke-width:1px,rx:14,ry:14;
+  classDef featLayer fill:#ECFDF5,stroke:#A7F3D0,stroke-width:1px,rx:14,ry:14;
+  classDef trainLayer fill:#EFF6FF,stroke:#BFDBFE,stroke-width:1px,rx:14,ry:14;
+  classDef mlopsLayer fill:#F5F3FF,stroke:#DDD6FE,stroke-width:1px,rx:14,ry:14;
+  classDef deployLayer fill:#F0FDFA,stroke:#99F6E4,stroke-width:1px,rx:14,ry:14;
+  
+
+  class D dataLayer;
+  class F featLayer;
+  class M trainLayer;
+  class O mlopsLayer;
+  class P deployLayer;
+  class A,B,C,D1,D2,E,F1,F2,X,G,H,I,J node;
+  class G,H,I emphasis;
 ```
 
 **Pipeline Flow:**
 ```
-Raw Sensor Data → Validation → Preprocessing → Feature Extraction → Model Training → MLflow → FastAPI
+Raw Sensor Data → Validation → Preprocessing → Feature Extraction → Model Training → MLflow → FastAPI → Docker
+
 ```
 
 ## Key Features
