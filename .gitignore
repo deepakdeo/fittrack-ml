@@ -83,3 +83,4 @@ logs/
 
 # Build journal (local development provenance tracking)
 build_journal.md
+banner_design_philosophy.md
