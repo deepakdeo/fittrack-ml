@@ -16,43 +16,22 @@ End-to-end machine learning pipeline for **Human Activity Recognition (HAR)** fr
 ## Architecture
 
 ```mermaid
-%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#58a6ff', 'primaryTextColor': '#e6edf3', 'primaryBorderColor': '#30363d', 'lineColor': '#8b949e', 'secondaryColor': '#161b22', 'tertiaryColor': '#0d1117'}}}%%
 flowchart LR
-    subgraph Data["📊 Data Layer"]
-        A[UCI HAR Dataset] --> B[Pandera Validation]
-        B --> C[Train/Val/Test Split]
+    subgraph Data[Data Layer]
+        A[UCI HAR] --> B[Validation] --> C[Split]
     end
-
-    subgraph Features["⚙️ Feature Engineering"]
-        C --> D[Time Domain]
-        C --> E[Frequency Domain]
-        D --> F[Normalized Features]
-        E --> F
+    subgraph Features[Feature Engineering]
+        C --> D[Time + Freq Domain] --> E[Normalize]
     end
-
-    subgraph Models["🤖 Model Training"]
-        F --> G[Random Forest]
-        F --> H[XGBoost]
-        F --> I[LSTM]
-        F --> J[1D-CNN]
+    subgraph Models[Model Training]
+        E --> F[RF / XGB / LSTM / CNN]
     end
-
-    subgraph MLOps["📈 MLOps"]
-        G & H & I & J --> K[MLflow Tracking]
-        K --> L[Model Registry]
-        L --> M[A/B Testing]
+    subgraph MLOps[MLOps]
+        F --> G[MLflow] --> H[Registry]
     end
-
-    subgraph Deploy["🚀 Deployment"]
-        M --> N[FastAPI]
-        N --> O[Docker]
+    subgraph Deploy[Deployment]
+        H --> I[FastAPI] --> J[Docker]
     end
-
-    style Data fill:#1f3a5f,stroke:#58a6ff,stroke-width:2px
-    style Features fill:#3d3a1f,stroke:#d29922,stroke-width:2px
-    style Models fill:#1f3d2a,stroke:#3fb950,stroke-width:2px
-    style MLOps fill:#2d1f4a,stroke:#a371f7,stroke-width:2px
-    style Deploy fill:#4a1f2a,stroke:#f85149,stroke-width:2px
 ```
 
 **Pipeline Flow:**
